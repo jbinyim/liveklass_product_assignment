@@ -87,6 +87,26 @@ src/
 - 카테고리: `development` | `design` | `marketing` | `business`
 - 전화번호: 한국 형식 (정규식은 `lib/validators/phone.ts`로 분리)
 
+## 디자인 토큰 (라이브클래스 풀매칭 — D016)
+- 폰트: Pretendard (Google Fonts CDN 또는 npm pretendard 패키지)
+- Primary: `#FC1150` (라이브클래스 핫핑크 CTA)
+- Primary hover: `#E10E48`
+- Primary soft (tint): `#FFE7ED`
+- Background: `#FFFFFF`
+- Surface (카드): `#F6F6F6`
+- Surface strong (섹션): `#F0F0F0`
+- Text primary: `#111316`
+- Text secondary: `#6B7280`
+- Text muted: `#9CA3AF`
+- Error: `#DC2626` (핫핑크와 충돌 회피)
+- Success: `#16A34A`
+- Warning: `#F59E0B`
+- 카드 라운드: `20px` (라이브클래스 압도적 사용)
+- 버튼 라운드: `30px` (pill)
+- 입력 필드 라운드: `8px` (폼 UX 위해 절제)
+- 그림자: 거의 사용 안 함 (라이브클래스 평면 톤)
+- Pencil 시안: `design.pen` 의 `theme: {tone: "liveklass"}` 변형이 source of truth
+
 ## 접근성 최소 기준
 - 모든 input에 연결된 label
 - 에러 메시지는 `aria-describedby`로 input과 연결, `role="alert"`

@@ -1472,6 +1472,55 @@ git commit -m "feat(app): QueryClient + MSW boot + Toaster providers 마운트"
 
 ## Task 11: UI 원자 — Button / Input / Field / Modal / Stepper / Spinner
 
+**디자인 토큰** (D016 라이브클래스 풀매칭). Tailwind config에서 별칭 잡거나 CSS 변수로 정의해 사용. 아래는 CSS 변수 + globals.css 셋업 가정 (Tailwind arbitrary value `bg-[var(--color-primary)]`).
+
+먼저 `src/app/globals.css`에 토큰 정의 (Tailwind directives 다음에):
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #FFFFFF;
+    --color-surface: #F6F6F6;
+    --color-surface-strong: #F0F0F0;
+    --color-border: #E5E7EB;
+    --color-border-strong: #D1D5DB;
+    --color-text-primary: #111316;
+    --color-text-secondary: #6B7280;
+    --color-text-muted: #9CA3AF;
+    --color-text-inverse: #FFFFFF;
+    --color-primary: #FC1150;
+    --color-primary-hover: #E10E48;
+    --color-primary-soft: #FFE7ED;
+    --color-error: #DC2626;
+    --color-error-soft: #FEE2E2;
+    --color-success: #16A34A;
+    --color-success-soft: #DCFCE7;
+    --color-warning: #F59E0B;
+    --color-warning-soft: #FEF3C7;
+    --radius-input: 8px;
+    --radius-card: 20px;
+    --radius-modal: 24px;
+    --radius-button: 30px;
+  }
+
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    color: var(--color-text-primary);
+    background: var(--color-bg);
+  }
+}
+```
+
+Pretendard 로드는 `app/layout.tsx`의 `<head>`에 CDN 링크 추가:
+```tsx
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+</head>
+```
+
 **Files:**
 - Create: `src/components/ui/Button.tsx`
 - Create: `src/components/ui/Input.tsx`
@@ -1479,6 +1528,10 @@ git commit -m "feat(app): QueryClient + MSW boot + Toaster providers 마운트"
 - Create: `src/components/ui/Modal.tsx`
 - Create: `src/components/ui/Stepper.tsx`
 - Create: `src/components/ui/Spinner.tsx`
+
+- [ ] **Step 0: globals.css 토큰 정의 + Pretendard 로드**
+
+위 globals.css와 layout.tsx `<head>` 적용.
 
 - [ ] **Step 1: Button**
 
@@ -1504,11 +1557,12 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={clsx(
-        "px-4 py-2 rounded text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed",
-        variant === "primary" && "bg-blue-600 text-white hover:bg-blue-700",
-        variant === "secondary" && "bg-gray-200 text-gray-900 hover:bg-gray-300",
-        variant === "ghost" && "bg-transparent text-gray-700 hover:bg-gray-100",
-        variant === "danger" && "bg-red-600 text-white hover:bg-red-700",
+        "inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed",
+        "rounded-[var(--radius-button)]",
+        variant === "primary" && "bg-[var(--color-primary)] text-[var(--color-text-inverse)] hover:bg-[var(--color-primary-hover)]",
+        variant === "secondary" && "bg-[var(--color-bg)] text-[var(--color-text-primary)] border border-[var(--color-border-strong)] hover:bg-[var(--color-surface)]",
+        variant === "ghost" && "bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]",
+        variant === "danger" && "bg-[var(--color-error)] text-[var(--color-text-inverse)] hover:opacity-90",
         className,
       )}
       {...rest}
@@ -1539,9 +1593,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
       ref={ref}
       aria-invalid={invalid || undefined}
       className={clsx(
-        "w-full px-3 py-2 border rounded text-sm",
-        invalid ? "border-red-500" : "border-gray-300 focus:border-blue-500",
-        "focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:bg-gray-100",
+        "w-full px-3 py-2.5 text-sm bg-[var(--color-bg)] text-[var(--color-text-primary)]",
+        "rounded-[var(--radius-input)] border",
+        invalid ? "border-[var(--color-error)]" : "border-[var(--color-border-strong)] focus:border-[var(--color-primary)]",
+        "focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-soft)] disabled:bg-[var(--color-surface-strong)] disabled:text-[var(--color-text-muted)]",
         className,
       )}
       {...rest}
@@ -1572,14 +1627,14 @@ export function Field({ label, error, optional, children }: Props) {
     invalid: Boolean(error),
   });
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700">
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-sm font-semibold text-[var(--color-text-primary)]">
         {label}
-        {optional && <span className="ml-1 text-gray-400">(선택)</span>}
+        {optional && <span className="ml-1 font-normal text-[var(--color-text-muted)]">(선택)</span>}
       </label>
       {child}
       {error && (
-        <span id={errorId} role="alert" className="text-sm text-red-600">
+        <span id={errorId} role="alert" className="text-xs text-[var(--color-error)]">
           {error}
         </span>
       )}
@@ -1621,15 +1676,15 @@ export function Modal({ open, onClose, title, children, footer }: Props) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl"
+        className="bg-[var(--color-bg)] rounded-[var(--radius-modal)] p-6 w-full max-w-md"
         onClick={e => e.stopPropagation()}
       >
-        <h2 id="modal-title" className="text-lg font-semibold mb-3">{title}</h2>
-        <div className="text-sm text-gray-700 mb-4">{children}</div>
+        <h2 id="modal-title" className="text-lg font-bold text-[var(--color-text-primary)] mb-3">{title}</h2>
+        <div className="text-sm text-[var(--color-text-secondary)] mb-5 leading-relaxed">{children}</div>
         {footer && <div className="flex justify-end gap-2">{footer}</div>}
       </div>
     </div>,
@@ -1682,7 +1737,7 @@ Create `src/components/ui/Spinner.tsx`:
 export function Spinner({ label = "로딩 중" }: { label?: string }) {
   return (
     <div role="status" aria-label={label} className="inline-flex items-center gap-2">
-      <span className="inline-block w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+      <span className="inline-block w-4 h-4 border-2 border-[var(--color-border-strong)] border-t-[var(--color-primary)] rounded-full animate-spin" />
     </div>
   );
 }
