@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import { server } from "@/lib/mocks/server";
 import {
   IntegratedApp,
@@ -115,5 +115,108 @@ describe("submission integration", () => {
     );
     // /review 그대로 유지
     expect(getRouterPath()).toBe("/review");
+  });
+
+  it("INVALID_INPUT: 첫 에러 스텝(/applicant)으로 자동 이동 + 인라인 에러 (D005-c)", async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.post("/api/enrollments", () =>
+        HttpResponse.json(
+          {
+            code: "INVALID_INPUT",
+            message: "입력값을 확인해주세요",
+            details: {
+              "applicant.email": "사용할 수 없는 이메일입니다",
+            },
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    render(<IntegratedApp />);
+
+    await fillStep1(user);
+    await fillStep2Personal(user);
+    await user.click(screen.getByRole("checkbox"));
+    await user.click(screen.getByRole("button", { name: "제출하기" }));
+
+    // 자동 점프 — /applicant
+    await waitFor(() => expect(getRouterPath()).toBe("/applicant"));
+    // 인라인 에러 메시지 표시
+    expect(
+      await screen.findByText("사용할 수 없는 이메일입니다"),
+    ).toBeInTheDocument();
+  });
+
+  it("네트워크 에러: 모달 + '재시도'로 동일 payload 재제출 (D005-d)", async () => {
+    const user = userEvent.setup();
+    let attempt = 0;
+    server.use(
+      http.post("/api/enrollments", async () => {
+        attempt += 1;
+        if (attempt === 1) return HttpResponse.error();
+        return HttpResponse.json(
+          {
+            enrollmentId: "enr-retry",
+            status: "confirmed",
+            enrolledAt: "2026-04-28T00:00:00.000Z",
+          },
+          { status: 201 },
+        );
+      }),
+    );
+    render(<IntegratedApp />);
+
+    await fillStep1(user);
+    await fillStep2Personal(user);
+    await user.click(screen.getByRole("checkbox"));
+    await user.click(screen.getByRole("button", { name: "제출하기" }));
+
+    // 첫 시도: 네트워크 모달
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByText("네트워크 오류")).toBeInTheDocument();
+    // 입력값 보존 — /review 그대로
+    expect(getRouterPath()).toBe("/review");
+
+    await user.click(screen.getByRole("button", { name: "재시도" }));
+    // 두 번째 시도: 성공 → /success
+    await waitFor(() =>
+      expect(getRouterPath()).toMatch(/^\/success\?id=enr-retry/),
+    );
+    expect(attempt).toBe(2);
+  });
+
+  it("연타 방지: 제출 버튼은 mutation 진행 중 disabled", async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn(async () => {
+      await delay(200);
+      return HttpResponse.json(
+        {
+          enrollmentId: "enr-once",
+          status: "confirmed",
+          enrolledAt: "2026-04-28T00:00:00.000Z",
+        },
+        { status: 201 },
+      );
+    });
+    server.use(http.post("/api/enrollments", handler));
+    render(<IntegratedApp />);
+
+    await fillStep1(user);
+    await fillStep2Personal(user);
+    await user.click(screen.getByRole("checkbox"));
+
+    const submitBtn = screen.getByRole("button", { name: "제출하기" });
+    // 첫 클릭은 효과 — mutation 시작 → 버튼 disabled
+    await user.click(submitBtn);
+    // 즉시 disabled 확인
+    expect(submitBtn).toBeDisabled();
+    // 두 번째 클릭 시도 — 무시되어야
+    await user.click(submitBtn);
+
+    await waitFor(() =>
+      expect(getRouterPath()).toMatch(/^\/success\?id=enr-once/),
+    );
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 });
