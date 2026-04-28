@@ -1,12 +1,21 @@
 "use client";
 
+import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useCourses } from "@/app/(enroll)/_shared/hooks/useCourses";
+import type { EnrollmentForm } from "@/app/(enroll)/_shared/schema";
 
 export function EnrollmentSummary() {
   const router = useRouter();
   const search = useSearchParams();
   const enrollmentId = search?.get("id") ?? "";
+
+  const { getValues } = useFormContext<EnrollmentForm>();
+  const { data } = useCourses();
+  const values = getValues();
+  const course = data?.courses.find((c) => c.id === values.courseId);
+  const applicant = values.applicant;
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 px-6 py-16">
@@ -27,7 +36,7 @@ export function EnrollmentSummary() {
       </p>
 
       {enrollmentId && (
-        <div className="flex items-center justify-center gap-2 rounded-md bg-[var(--color-surface)] px-5 py-3 w-full max-w-sm">
+        <div className="flex w-full max-w-sm items-center justify-center gap-2 rounded-md bg-[var(--color-surface)] px-5 py-3">
           <span className="text-sm text-[var(--color-text-muted)]">
             신청 번호
           </span>
@@ -35,6 +44,37 @@ export function EnrollmentSummary() {
             {enrollmentId}
           </span>
         </div>
+      )}
+
+      {(course || applicant?.name) && (
+        <section
+          aria-label="신청 요약"
+          className="flex w-full max-w-md flex-col gap-2 rounded-[var(--radius-card)] border border-gray-200 bg-white p-5 text-sm"
+        >
+          {course && (
+            <div className="flex justify-between gap-3">
+              <span className="text-[var(--color-text-muted)]">강의</span>
+              <span className="text-right font-semibold text-[var(--color-text-primary)]">
+                {course.title}
+              </span>
+            </div>
+          )}
+          {applicant?.name && (
+            <div className="flex justify-between gap-3">
+              <span className="text-[var(--color-text-muted)]">신청자</span>
+              <span className="text-right font-semibold text-[var(--color-text-primary)]">
+                {applicant.name}
+                {applicant.email ? ` (${applicant.email})` : ""}
+              </span>
+            </div>
+          )}
+          <div className="flex justify-between gap-3">
+            <span className="text-[var(--color-text-muted)]">신청 유형</span>
+            <span className="font-semibold text-[var(--color-text-primary)]">
+              {values.type === "group" ? "단체" : "개인"}
+            </span>
+          </div>
+        </section>
       )}
 
       <div className="pt-4">
