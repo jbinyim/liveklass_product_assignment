@@ -6,11 +6,13 @@ import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { loadDraft, clearDraft } from "@/lib/storage/enrollmentDraft";
 import { useDraftPersistence } from "@/app/(enroll)/_shared/hooks/useDraftPersistence";
+import { useBeforeUnloadGuard } from "@/app/(enroll)/_shared/hooks/useBeforeUnloadGuard";
 import type { EnrollmentForm } from "@/app/(enroll)/_shared/schema";
 
 export function DraftRestoreGate({ children }: { children: ReactNode }) {
   const { reset } = useFormContext<EnrollmentForm>();
   useDraftPersistence();
+  useBeforeUnloadGuard();
   const [phase, setPhase] = useState<"loading" | "prompt" | "ready">(
     "loading",
   );
