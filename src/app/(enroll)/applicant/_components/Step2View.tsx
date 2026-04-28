@@ -21,11 +21,16 @@ export function Step2View() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-6 py-10 flex flex-col gap-8">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-5">
         <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
           신청자 정보
         </h2>
-        <TypeSwitchToggle />
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-[var(--color-text-muted)]">
+            신청 유형
+          </span>
+          <TypeSwitchToggle />
+        </div>
       </div>
 
       <section aria-label="신청자 정보" className="flex flex-col gap-5">
