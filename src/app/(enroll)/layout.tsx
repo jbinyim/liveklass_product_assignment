@@ -8,6 +8,8 @@ import {
   type EnrollmentForm,
 } from "@/app/(enroll)/_shared/schema";
 import { enrollmentDefaults } from "@/app/(enroll)/_shared/defaults";
+import { DraftRestoreGate } from "@/app/(enroll)/_shared/components/DraftRestoreGate";
+import { StepIndicator } from "@/app/(enroll)/_shared/components/StepIndicator";
 
 export default function EnrollLayout({ children }: { children: ReactNode }) {
   const methods = useForm<EnrollmentForm>({
@@ -19,7 +21,14 @@ export default function EnrollLayout({ children }: { children: ReactNode }) {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-1 flex-col">{children}</div>
+      <DraftRestoreGate>
+        <div className="flex flex-1 flex-col">
+          <header className="mx-auto w-full max-w-3xl px-6 pt-8">
+            <StepIndicator />
+          </header>
+          {children}
+        </div>
+      </DraftRestoreGate>
     </FormProvider>
   );
 }
