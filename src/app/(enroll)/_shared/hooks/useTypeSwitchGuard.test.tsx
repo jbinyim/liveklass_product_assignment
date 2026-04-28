@@ -79,7 +79,10 @@ describe("useTypeSwitchGuard", () => {
     });
     expect(result.current.guard.modalState.open).toBe(false);
     expect(result.current.getType()).toBe("personal");
-    const g = result.current.getGroup() as { organizationName: string; contactPerson: string };
+    const g = result.current.getGroup() as unknown as {
+      organizationName: string;
+      contactPerson: string;
+    };
     expect(g.organizationName).toBe("");
     expect(g.contactPerson).toBe("");
   });
@@ -103,7 +106,7 @@ describe("useTypeSwitchGuard", () => {
     });
     expect(result.current.guard.modalState.open).toBe(false);
     expect(result.current.getType()).toBe("group");
-    const g = result.current.getGroup() as { organizationName: string };
+    const g = result.current.getGroup() as unknown as { organizationName: string };
     expect(g.organizationName).toBe("데일리");
   });
 

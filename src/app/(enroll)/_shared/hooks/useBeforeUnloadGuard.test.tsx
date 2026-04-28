@@ -40,7 +40,7 @@ describe("useBeforeUnloadGuard", () => {
       </Wrapper>,
     );
     const beforeUnloadCalls = addSpy.mock.calls.filter(
-      ([type]) => type === "beforeunload",
+      ([type]: [string, ...unknown[]]) => type === "beforeunload",
     );
     expect(beforeUnloadCalls).toHaveLength(0);
   });
@@ -56,7 +56,7 @@ describe("useBeforeUnloadGuard", () => {
       getByTestId("dirty").click();
     });
     const beforeUnloadCalls = addSpy.mock.calls.filter(
-      ([type]) => type === "beforeunload",
+      ([type]: [string, ...unknown[]]) => type === "beforeunload",
     );
     expect(beforeUnloadCalls.length).toBeGreaterThan(0);
   });
@@ -73,7 +73,7 @@ describe("useBeforeUnloadGuard", () => {
     });
     unmount();
     const calls = removeSpy.mock.calls.filter(
-      ([type]) => type === "beforeunload",
+      ([type]: [string, ...unknown[]]) => type === "beforeunload",
     );
     expect(calls.length).toBeGreaterThan(0);
   });

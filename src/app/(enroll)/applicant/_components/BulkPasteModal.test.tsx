@@ -60,6 +60,6 @@ describe("BulkPasteModal", () => {
     await user.type(ta, lines);
     expect(screen.getByRole("alert")).toHaveTextContent(/10명/);
     await user.click(screen.getByRole("button", { name: /10명 적용/ }));
-    expect(onApply.mock.calls[0][0]).toHaveLength(10);
+    expect(onApply.mock.calls[0]?.[0]).toHaveLength(10);
   });
 });
