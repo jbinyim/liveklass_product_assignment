@@ -111,8 +111,8 @@ export function GroupFields() {
         />
       </Field>
 
-      <div className="flex items-center justify-between gap-4 border-t border-gray-200 pt-5">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 pt-5">
+        <div className="flex flex-wrap items-center gap-3">
           <h4 className="text-base font-bold text-[var(--color-text-primary)]">
             참가자 명단
           </h4>

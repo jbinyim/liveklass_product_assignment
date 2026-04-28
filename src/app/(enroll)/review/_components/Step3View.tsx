@@ -86,7 +86,7 @@ export function Step3View() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-6 py-10 flex flex-col gap-6">
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-8 sm:gap-6 sm:px-6 sm:py-10">
       <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
         확인 및 제출
       </h2>

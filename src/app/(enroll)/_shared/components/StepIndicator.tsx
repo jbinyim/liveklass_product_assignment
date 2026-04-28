@@ -73,7 +73,7 @@ export function StepIndicator() {
             {idx < STEPS.length - 1 && (
               <span
                 aria-hidden="true"
-                className="h-px w-8 bg-[var(--color-text-muted)] opacity-50"
+                className="h-px w-3 bg-[var(--color-text-muted)] opacity-50 sm:w-8"
               />
             )}
           </li>

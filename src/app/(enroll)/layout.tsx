@@ -27,7 +27,7 @@ export default function EnrollLayout({ children }: { children: ReactNode }) {
       <DraftRestoreGate>
         <div className="flex flex-1 flex-col">
           {!isSuccess && (
-            <header className="mx-auto w-full max-w-3xl px-6 pt-8">
+            <header className="mx-auto w-full max-w-3xl px-4 pt-6 sm:px-6 sm:pt-8">
               <StepIndicator />
             </header>
           )}

@@ -20,7 +20,7 @@ export function Step2View() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-6 py-10 flex flex-col gap-8">
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8 sm:gap-8 sm:px-6 sm:py-10">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-5">
         <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
           신청자 정보

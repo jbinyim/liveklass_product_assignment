@@ -18,7 +18,7 @@ export function EnrollmentSummary() {
   const applicant = values.applicant;
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 px-6 py-16">
+    <main className="mx-auto flex w-full max-w-3xl flex-col items-center gap-5 px-4 py-12 sm:gap-6 sm:px-6 sm:py-16">
       <div
         aria-hidden="true"
         className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100"

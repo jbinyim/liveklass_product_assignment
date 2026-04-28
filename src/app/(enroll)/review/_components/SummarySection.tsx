@@ -28,7 +28,7 @@ interface RowProps {
 function Row({ label, children }: RowProps) {
   return (
     <div className="flex gap-4 text-sm">
-      <span className="w-20 shrink-0 text-[var(--color-text-muted)]">
+      <span className="w-16 shrink-0 text-[var(--color-text-muted)] sm:w-20">
         {label}
       </span>
       <span className="flex-1 font-medium text-[var(--color-text-primary)]">

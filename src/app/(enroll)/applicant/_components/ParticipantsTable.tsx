@@ -37,7 +37,7 @@ export function ParticipantsTable() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="grid grid-cols-[24px_200px_1fr] gap-2 px-3 text-xs font-semibold text-[var(--color-text-muted)]">
+      <div className="grid grid-cols-[20px_minmax(0,1fr)_minmax(0,1.5fr)] sm:grid-cols-[24px_200px_1fr] gap-2 px-3 text-xs font-semibold text-[var(--color-text-muted)]">
         <span>#</span>
         <span>이름</span>
         <span>이메일</span>
@@ -47,7 +47,7 @@ export function ParticipantsTable() {
         const emailErr = participantErrors[idx]?.email?.message;
         return (
           <div key={idx} className="flex flex-col gap-1">
-            <div className="grid grid-cols-[24px_200px_1fr] items-center gap-2">
+            <div className="grid grid-cols-[20px_minmax(0,1fr)_minmax(0,1.5fr)] sm:grid-cols-[24px_200px_1fr] items-center gap-2">
               <span className="text-sm text-[var(--color-text-muted)]">
                 {idx + 1}
               </span>
