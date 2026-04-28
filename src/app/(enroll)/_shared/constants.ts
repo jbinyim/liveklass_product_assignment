@@ -6,6 +6,8 @@ export const MOTIVATION_MAX = 300;
 export const HEADCOUNT_MIN = 2;
 export const HEADCOUNT_MAX = 10;
 
+export const SEATS_LOW_THRESHOLD = 5;
+
 export const CATEGORIES = [
   "development",
   "design",
