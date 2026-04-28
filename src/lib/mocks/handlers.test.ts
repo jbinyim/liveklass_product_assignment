@@ -23,20 +23,27 @@ const validPersonal = (overrides?: Partial<EnrollmentRequest>): EnrollmentReques
 
 describe("MSW handlers", () => {
   describe("GET /api/courses", () => {
-    it("Course[] 반환 + 카테고리 4종 모두 포함", async () => {
-      const courses = await getCourses();
-      expect(courses.length).toBeGreaterThan(0);
-      const cats = new Set(courses.map((c) => c.category));
-      expect(cats).toEqual(
-        new Set(["development", "design", "marketing", "business"]),
-      );
+    it("CourseListResponse 반환 + 카테고리 4종 모두 포함", async () => {
+      const res = await getCourses();
+      expect(res.courses.length).toBeGreaterThan(0);
+      expect(res.categories).toEqual([
+        "development",
+        "design",
+        "marketing",
+        "business",
+      ]);
     });
 
     it("정원 마감 강의 (course-003) 포함", async () => {
-      const courses = await getCourses();
-      const full = courses.find((c) => c.id === "course-003");
+      const res = await getCourses();
+      const full = res.courses.find((c) => c.id === "course-003");
       expect(full).toBeDefined();
       expect(full?.currentEnrollment).toBe(full?.maxCapacity);
+    });
+
+    it("category 파라미터로 서버 필터링", async () => {
+      const res = await getCourses("design");
+      expect(res.courses.every((c) => c.category === "design")).toBe(true);
     });
   });
 
@@ -48,9 +55,13 @@ describe("MSW handlers", () => {
     });
 
     it("currentEnrollment 1 증가", async () => {
-      const before = (await getCourses()).find((c) => c.id === "course-001");
+      const before = (await getCourses()).courses.find(
+        (c) => c.id === "course-001",
+      );
       await submitEnrollment(validPersonal());
-      const after = (await getCourses()).find((c) => c.id === "course-001");
+      const after = (await getCourses()).courses.find(
+        (c) => c.id === "course-001",
+      );
       expect(after?.currentEnrollment).toBe((before?.currentEnrollment ?? 0) + 1);
     });
   });
@@ -197,7 +208,7 @@ describe("MSW handlers", () => {
 describe("vitest lifecycle: resetMockState", () => {
   it("각 테스트마다 currentEnrollment 초기화 (앞 테스트 영향 없음)", async () => {
     // 직전 describe들에서 course-001을 여러 번 등록했지만 reset 됐어야 함
-    const c = (await getCourses()).find((c) => c.id === "course-001");
+    const c = (await getCourses()).courses.find((c) => c.id === "course-001");
     expect(c?.currentEnrollment).toBe(12);
   });
 });

@@ -1,6 +1,8 @@
 import { http, HttpResponse, delay } from "msw";
 import { enrollmentSchema } from "@/app/(enroll)/_shared/schema";
+import { CATEGORIES } from "@/app/(enroll)/_shared/constants";
 import type {
+  CourseListResponse,
   EnrollmentResponse,
   ErrorResponse,
 } from "@/app/(enroll)/_shared/api/types";
@@ -32,9 +34,20 @@ function zodIssuesToDetails(
 }
 
 export const handlers = [
-  http.get("/api/courses", async () => {
+  http.get("/api/courses", async ({ request }) => {
     await delay(150);
-    return HttpResponse.json(getMockCourses());
+    const url = new URL(request.url);
+    const category = url.searchParams.get("category");
+    const all = getMockCourses();
+    const courses =
+      category && category !== "all"
+        ? all.filter((c) => c.category === category)
+        : all;
+    const body: CourseListResponse = {
+      courses,
+      categories: [...CATEGORIES],
+    };
+    return HttpResponse.json(body);
   }),
 
   http.post("/api/enrollments", async ({ request }) => {

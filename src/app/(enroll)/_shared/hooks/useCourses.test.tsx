@@ -11,7 +11,8 @@ describe("useCourses", () => {
     const { result } = renderHook(() => useCourses(), { wrapper: Wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.length).toBeGreaterThan(0);
+    expect(result.current.data?.courses.length).toBeGreaterThan(0);
+    expect(result.current.data?.categories.length).toBeGreaterThan(0);
   });
 
   it("서버 에러 시 isError true", async () => {

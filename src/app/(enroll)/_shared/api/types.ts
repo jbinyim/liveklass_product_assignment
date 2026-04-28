@@ -17,6 +17,11 @@ export interface Course {
   instructor: string;
 }
 
+export interface CourseListResponse {
+  courses: Course[];
+  categories: string[];
+}
+
 export type EnrollmentRequest = PersonalEnrollment | GroupEnrollment;
 
 export interface EnrollmentResponse {

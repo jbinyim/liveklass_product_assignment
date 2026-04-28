@@ -67,12 +67,13 @@ function Card({ title, editStep, children }: CardProps) {
 
 export function SummarySection() {
   const { watch } = useFormContext<EnrollmentForm>();
-  const { data: courses } = useCourses();
+  const { data } = useCourses();
+  const courses = data?.courses ?? [];
   const courseId = watch("courseId") ?? "";
   const type = watch("type");
   const applicant = watch("applicant");
   const group = watch("group" as never) as unknown as GroupBlock | undefined;
-  const course = courses?.find((c) => c.id === courseId);
+  const course = courses.find((c) => c.id === courseId);
 
   return (
     <div className="flex flex-col gap-4">

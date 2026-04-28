@@ -19,11 +19,22 @@ describe("도메인 API 함수", () => {
   it("getCourses는 GET /api/courses 호출", async () => {
     fetchSpy = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse(200, []));
+      .mockResolvedValue(jsonResponse(200, { courses: [], categories: [] }));
     const data = await getCourses();
-    expect(data).toEqual([]);
+    expect(data).toEqual({ courses: [], categories: [] });
     expect(fetchSpy).toHaveBeenCalledWith(
       "/api/courses",
+      expect.objectContaining({ method: "GET" }),
+    );
+  });
+
+  it("getCourses(category)는 query parameter 포함", async () => {
+    fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(200, { courses: [], categories: [] }));
+    await getCourses("design");
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "/api/courses?category=design",
       expect.objectContaining({ method: "GET" }),
     );
   });

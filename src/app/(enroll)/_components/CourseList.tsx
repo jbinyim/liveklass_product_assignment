@@ -18,7 +18,7 @@ function SkeletonCard() {
 }
 
 export function CourseList({ category }: CourseListProps) {
-  const { data, isLoading, isError, refetch } = useCourses();
+  const { data, isLoading, isError, refetch } = useCourses(category);
   const { setValue, watch } = useFormContext<EnrollmentForm>();
   const selectedId = watch("courseId");
 
@@ -48,10 +48,7 @@ export function CourseList({ category }: CourseListProps) {
     );
   }
 
-  const filtered =
-    category === "all"
-      ? (data ?? [])
-      : (data ?? []).filter((c) => c.category === category);
+  const filtered = data?.courses ?? [];
 
   if (filtered.length === 0) {
     return (
