@@ -32,7 +32,7 @@ export function CourseCard({ course, selected, onSelect }: CourseCardProps) {
       aria-pressed={selected}
       aria-label={`${course.title} 강의 선택`}
       className={clsx(
-        "flex flex-col gap-3 rounded-[var(--radius-card)] border bg-white p-5 text-left transition-colors",
+        "flex w-full flex-col gap-3 rounded-[var(--radius-card)] border bg-white p-5 text-left transition-colors",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]",
         !isFull && !selected && "border-gray-200 hover:border-gray-300",
         selected &&
