@@ -30,6 +30,17 @@ export async function fetcher<T>(
       signal,
     });
   } catch (err) {
+    // AbortError는 호출자가 의도적으로 취소한 경우 (React 18 Strict Mode dev 더블 마운트 / 컴포넌트 언마운트 / queryKey 변경).
+    // ApiError.network로 감싸지 않고 그대로 throw하면 React Query가 silent하게 처리.
+    if (err instanceof DOMException && err.name === "AbortError") {
+      throw err;
+    }
+    if (
+      err instanceof Error &&
+      (err.name === "AbortError" || err.message?.includes("aborted"))
+    ) {
+      throw err;
+    }
     throw ApiError.network(err instanceof Error ? err.message : undefined);
   }
 
