@@ -31,12 +31,25 @@ function pickStep(path: string): Step {
 }
 
 export function Step3View() {
-  const { handleSubmit, setError } = useFormContext<EnrollmentForm>();
+  const { handleSubmit, setError, setFocus } = useFormContext<EnrollmentForm>();
   const nav = useStepNavigation();
   const router = useRouter();
   const { mutateAsync, isPending } = useSubmitEnrollment();
   const [error, setError2] = useState<ApiError | null>(null);
   const [pending, setPending] = useState<EnrollmentForm | null>(null);
+
+  const focusFirstError = (path: string) => {
+    // 라우트 전환 후 input이 마운트될 때까지 한 tick 기다림
+    setTimeout(() => {
+      try {
+        setFocus(path as never);
+      } catch {
+        // path가 마운트 안 된 경우 무시
+      }
+      const el = document.querySelector<HTMLElement>(`[name="${path}"]`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 50);
+  };
 
   const submit = async (data: EnrollmentForm) => {
     setPending(data);
@@ -50,13 +63,18 @@ export function Step3View() {
         return;
       }
       if (e.kind === "business" && e.code === "INVALID_INPUT" && e.details) {
-        // 필드별 setError + 첫 에러 스텝으로 점프 (D005-c)
+        // 필드별 setError + 첫 에러 스텝으로 점프 + 첫 에러 필드 포커스/스크롤 (D005-c)
         let firstStep: Step | null = null;
+        let firstPath: string | null = null;
         for (const [path, message] of Object.entries(e.details)) {
           setError(path as never, { type: "server", message });
-          if (!firstStep) firstStep = pickStep(path);
+          if (!firstStep) {
+            firstStep = pickStep(path);
+            firstPath = path;
+          }
         }
         if (firstStep && firstStep !== nav.current) nav.goToStep(firstStep);
+        if (firstPath) focusFirstError(firstPath);
         return;
       }
       setError2(e);
