@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "라이브클래스 수강 신청",
@@ -18,7 +19,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-bg text-text-primary">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
