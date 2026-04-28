@@ -25,9 +25,9 @@ export const motivationField = z.string().max(MOTIVATION_MAX, {
   message: `수강 동기는 ${MOTIVATION_MAX}자 이하이어야 합니다`,
 });
 
-export const agreedToTermsField = z.literal(true, {
-  message: "약관에 동의해야 합니다",
-});
+export const agreedToTermsField = z
+  .boolean()
+  .refine((v) => v === true, { message: "약관에 동의해야 합니다" });
 
 export const applicantSchema = z.object({
   name: nameField,
