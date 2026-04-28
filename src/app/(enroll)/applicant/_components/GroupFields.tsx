@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -17,8 +17,6 @@ import type {
   EnrollmentForm,
   Participant,
 } from "@/app/(enroll)/_shared/schema";
-
-const EMPTY_PARTICIPANT: Participant = { name: "", email: "" };
 
 function hasFilledTail(
   participants: Participant[],
@@ -58,13 +56,21 @@ export function GroupFields() {
     if (next > current.length) {
       const padding = Array.from(
         { length: next - current.length },
-        () => EMPTY_PARTICIPANT,
+        () => ({ name: "", email: "" }),
       );
       replace([...current, ...padding]);
     } else if (next < current.length) {
       replace(current.slice(0, next));
     }
   };
+
+  // 단체 모드 첫 진입 시 headCount(default 2) ↔ participants 동기화 (D008-b)
+  useEffect(() => {
+    if (fields.length !== headCount) {
+      applyHeadCount(headCount);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleHeadCountChange = (next: number) => {
     if (next >= fields.length) {

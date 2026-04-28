@@ -39,7 +39,8 @@ describe("GroupFields", () => {
         <CountSpy />
       </Wrapper>,
     );
-    expect(screen.getByTestId("spy").textContent).toBe("hc=2 len=0");
+    // 마운트 시 headCount(default 2) ↔ participants 자동 동기화
+    expect(screen.getByTestId("spy").textContent).toBe("hc=2 len=2");
     await user.click(screen.getByLabelText("증가"));
     expect(screen.getByTestId("spy").textContent).toBe("hc=3 len=3");
   });
