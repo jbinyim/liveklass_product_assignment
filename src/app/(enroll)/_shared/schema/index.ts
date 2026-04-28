@@ -11,6 +11,8 @@ export {
   participantSchema,
 } from "./group";
 export type { GroupEnrollment, Participant } from "./group";
+export { STEPS, STEP_FIELDS } from "./step";
+export type { Step } from "./step";
 
 export const enrollmentSchema = z.discriminatedUnion("type", [
   personalEnrollmentSchema,
