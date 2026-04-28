@@ -1,4 +1,4 @@
-# 라이브클래스 수강 신청 — 다단계 폼 (FE 채용 과제)
+# 라이브클래스 수강 신청 — 다단계 폼
 
 3단계 멀티스텝 수강 신청 폼. 평가 초점은 **폼 상태 관리 / 조건부 필드 정합성 / 스텝별 검증 / 에러 UX** 네 가지이며, 명세가 비워둔 결정과 트레이드오프는 [`docs/decisions.md`](docs/decisions.md)의 D001~D015에 1차 소스로 정리해 두었습니다.
 
@@ -292,13 +292,6 @@ API 모델이 `applicant`와 `group.participants`를 별도 필드로 분리한 
 - Phase별 plan 파일을 미리 작성한 뒤 검토·승인하는 흐름으로 진행했습니다.
 - 함수·컴포넌트·테스트 케이스의 1차 작성은 AI 도움을 받았고, 모든 산출물은 본인이 검토·수정·승인한 뒤 커밋했습니다.
 - `design.pen` 시안은 Pencil MCP로 LK theme 토큰(색·라운드·padding·간격)을 추출해 `globals.css`와 컴포넌트에 매핑했습니다.
-
-### 본인이 주도한 결정 / 검토
-
-- `design.pen`의 LK theme 채택과 색·라운드·padding 값 검증
-- 매 phase 시작 전 plan 검토와 승인, 커밋 시점 통제 (자동 커밋 거부, README는 미리보기 후 커밋)
-- 통합 테스트 라우팅 시뮬레이션 방식(mock router store) 채택
-- 단체 모드 `useFieldArray` 인스턴스 분리 버그 발견·수정 (commit [`7340294`](https://github.com/jbinyim/liveklass_product_assignment/commit/7340294))
 
 ### 활용 중 발견한 한계
 
