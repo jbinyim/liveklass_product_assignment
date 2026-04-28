@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { FormProvider, useForm, type DefaultValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,14 +19,18 @@ export default function EnrollLayout({ children }: { children: ReactNode }) {
     reValidateMode: "onChange",
     defaultValues: enrollmentDefaults as DefaultValues<EnrollmentForm>,
   });
+  const pathname = usePathname() ?? "/";
+  const isSuccess = pathname.startsWith("/success");
 
   return (
     <FormProvider {...methods}>
       <DraftRestoreGate>
         <div className="flex flex-1 flex-col">
-          <header className="mx-auto w-full max-w-3xl px-6 pt-8">
-            <StepIndicator />
-          </header>
+          {!isSuccess && (
+            <header className="mx-auto w-full max-w-3xl px-6 pt-8">
+              <StepIndicator />
+            </header>
+          )}
           {children}
         </div>
       </DraftRestoreGate>
