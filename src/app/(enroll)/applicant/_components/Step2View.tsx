@@ -3,7 +3,8 @@
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { ApplicantFields } from "./ApplicantFields";
-import { EnrollmentTypeSelect } from "@/app/(enroll)/_components/EnrollmentTypeSelect";
+import { GroupFields } from "./GroupFields";
+import { TypeSwitchToggle } from "./TypeSwitchToggle";
 import { useStepNavigation } from "@/app/(enroll)/_shared/hooks/useStepNavigation";
 import { STEP_FIELDS } from "@/app/(enroll)/_shared/schema";
 import type { EnrollmentForm } from "@/app/(enroll)/_shared/schema";
@@ -20,13 +21,11 @@ export function Step2View() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-6 py-10 flex flex-col gap-8">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
-          신청 정보 입력
+          신청자 정보
         </h2>
-        <div className="w-72">
-          <EnrollmentTypeSelect />
-        </div>
+        <TypeSwitchToggle />
       </div>
 
       <section aria-label="신청자 정보" className="flex flex-col gap-5">
@@ -36,14 +35,12 @@ export function Step2View() {
       {type === "group" && (
         <section
           aria-label="단체 정보"
-          className="flex flex-col gap-4 border-t border-gray-200 pt-8"
+          className="flex flex-col gap-5 border-t border-gray-200 pt-8"
         >
           <h3 className="text-xl font-bold text-[var(--color-text-primary)]">
             단체 정보
           </h3>
-          <p className="text-sm text-[var(--color-text-secondary)]">
-            단체 정보는 다음 단계에서 채울 예정입니다.
-          </p>
+          <GroupFields />
         </section>
       )}
 
